@@ -49,7 +49,7 @@
 				p_password ,
 				p_info
 				    from
-			User 
+			#{table_name} 
 			where p_nick = #{nick} and p_password = #{password};
 	</select>
 	
