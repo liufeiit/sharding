@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias alias="NovaDevice" type="com.ruoogle.nova.core.meta.NovaDevice" />
+		<typeAlias alias="NovaUser" type="com.ruoogle.nova.core.meta.NovaUser" />
+		<typeAlias alias="NovaUserInfo" type="com.ruoogle.nova.core.meta.NovaUserInfo" />
+		<typeAlias alias="NovaUserToken" type="com.ruoogle.nova.core.meta.NovaUserToken" />
+		<typeAlias alias="NovaSystemQuestion" type="com.ruoogle.nova.core.meta.NovaSystemQuestion" />
+		<typeAlias alias="NovaUserPresence" type="com.ruoogle.nova.core.meta.NovaUserPresence" />
+		<typeAlias alias="NovaUserMessage" type="com.ruoogle.nova.core.meta.NovaUserMessage" />
+		<typeAlias alias="NovaUserChatgroup" type="com.ruoogle.nova.core.meta.NovaUserChatgroup" />
+		<typeAlias alias="NovaUserChatgroupLog" type="com.ruoogle.nova.core.meta.NovaUserChatgroupLog" />
+		<typeAlias alias="NovaUserAvatar" type="com.ruoogle.nova.core.meta.NovaUserAvatar" />
+		<typeAlias alias="NovaUserEvaluate" type="com.ruoogle.nova.core.meta.NovaUserEvaluate" />
+		<typeAlias alias="NovaUserQuestionLog" type="com.ruoogle.nova.core.meta.NovaUserQuestionLog" />
+		<typeAlias alias="NovaUserThirdparty" type="com.ruoogle.nova.core.meta.NovaUserThirdparty" />
+		<typeAlias alias="NovaUserScore" type="com.ruoogle.nova.core.meta.NovaUserScore" />
+		<typeAlias alias="NovaUserNotify" type="com.ruoogle.nova.core.meta.NovaUserNotify" />
+		<typeAlias alias="NovaSystemProp" type="com.ruoogle.nova.core.meta.NovaSystemProp" />
+		<typeAlias alias="NovaUserProp" type="com.ruoogle.nova.core.meta.NovaUserProp" />
+		<typeAlias alias="NovaSystemMonitor" type="com.ruoogle.nova.core.meta.NovaSystemMonitor" />
+		<typeAlias alias="NovaUserVersion" type="com.ruoogle.nova.core.meta.NovaUserVersion" />
+		<typeAlias alias="NovaSystemQuestionCollect" type="com.ruoogle.nova.core.meta.NovaSystemQuestionCollect" />
+		<typeAlias alias="NovaSystemSuggestApp" type="com.ruoogle.nova.core.meta.NovaSystemSuggestApp" />
+		<typeAlias alias="NovaSystemAdmin" type="com.ruoogle.nova.core.meta.NovaSystemAdmin" />
+		<typeAlias alias="NovaUserTrade" type="com.ruoogle.nova.core.meta.NovaUserTrade" />
+		<typeAlias alias="NovaSystemParam" type="com.ruoogle.nova.core.meta.NovaSystemParam" />
+		<typeAlias alias="NovaSystemDefaultInfo" type="com.ruoogle.nova.core.meta.NovaSystemDefaultInfo" />
+		<typeAlias alias="NovaUserOperation" type="com.ruoogle.nova.core.meta.NovaUserOperation" />
+		<typeAlias alias="NovaExtendMessage" type="com.ruoogle.nova.core.meta.NovaExtendMessage" />
+		<typeAlias alias="NovaExtendMarketing" type="com.ruoogle.nova.core.meta.NovaExtendMarketing" />
+		<typeAlias alias="NovaSystemFakeAnswer" type="com.ruoogle.nova.core.meta.NovaSystemFakeAnswer" />
+		<typeAlias alias="NovaExtendMatchedFakeuser" type="com.ruoogle.nova.core.meta.NovaExtendMatchedFakeuser" />
+		<typeAlias alias="NovaExtendFakeuser" type="com.ruoogle.nova.core.meta.NovaExtendFakeuser" />
+		<typeAlias alias="NovaUserAvatarArray" type="com.ruoogle.nova.core.meta.NovaUserAvatarArray" />
+		<typeAlias alias="NovaUserAvatarPraiseLog" type="com.ruoogle.nova.core.meta.NovaUserAvatarPraiseLog" />
+		<typeAlias alias="NovaUserBlackbox" type="com.ruoogle.nova.core.meta.NovaUserBlackbox" />
+		<typeAlias alias="NovaUserReport" type="com.ruoogle.nova.core.meta.NovaUserReport" />
+		<typeAlias alias="NovaUserRelationship" type="com.ruoogle.nova.core.meta.NovaUserRelationship" />
+		<typeAlias alias="NovaUserBlacklist" type="com.ruoogle.nova.core.meta.NovaUserBlacklist" />
+		<typeAlias alias="NovaUserRoomMessage" type="com.ruoogle.nova.core.meta.NovaUserRoomMessage" />
+		<typeAlias alias="NovaSystemCompere" type="com.ruoogle.nova.core.meta.NovaSystemCompere" />
+		<typeAlias alias="NovaUserRoomRight" type="com.ruoogle.nova.core.meta.NovaUserRoomRight" />
+		<typeAlias alias="NovaUserChat" type="com.ruoogle.nova.core.meta.NovaUserChat" />
+		<typeAlias alias="NovaSystemRoom" type="com.ruoogle.nova.core.meta.NovaSystemRoom" />
+		<typeAlias alias="NovaSystemCover" type="com.ruoogle.nova.core.meta.NovaSystemCover" />
+		<typeAlias alias="NovaUserCover" type="com.ruoogle.nova.core.meta.NovaUserCover" />
+		<typeAlias alias="NovaSystemGift" type="com.ruoogle.nova.core.meta.NovaSystemGift" />
+		<typeAlias alias="NovaUserGift" type="com.ruoogle.nova.core.meta.NovaUserGift" />
+		<typeAlias alias="NovaUserGiftLog" type="com.ruoogle.nova.core.meta.NovaUserGiftLog" />
+		<typeAlias alias="NovaSystemRoomSubject" type="com.ruoogle.nova.core.meta.NovaSystemRoomSubject" />
+		<typeAlias alias="NovaUserAccess" type="com.ruoogle.nova.core.meta.NovaUserAccess" />
+		<typeAlias alias="NovaUserRoom" type="com.ruoogle.nova.core.meta.NovaUserRoom" />
+		<typeAlias alias="NovaDomob" type="com.ruoogle.nova.core.meta.NovaDomob" />
+		<typeAlias alias = "NovaExtendMarketingStatistics" type = "com.ruoogle.nova.core.meta.NovaExtendMarketingStatistics"/>
+		
+		<typeAlias alias="NovaUserWithDistance" type="com.ruoogle.nova.core.meta.result.NovaUserWithDistance" />
+		<typeAlias alias="NovaUserRankList" type="com.ruoogle.nova.core.meta.NovaUserRankList" />
+		<typeAlias alias="NovaTreasure" type="com.ruoogle.nova.core.meta.NovaTreasure" />
+		<typeAlias alias="NovaUserNearBy" type="com.ruoogle.nova.core.meta.NovaUserNearBy" />
+		<typeAlias alias="NovaSystemAccessMonitor" type="com.ruoogle.nova.core.meta.NovaSystemAccessMonitor" />
+		<typeAlias alias="NovaSystemAction" type = "com.ruoogle.nova.core.meta.NovaSystemAction"  />
+		<typeAlias alias="NovaUserExtend" type = "com.ruoogle.nova.core.meta.NovaUserExtend"  />
+		<typeAlias alias="AndroidDeviceLog" type = "com.ruoogle.nova.core.meta.AndroidDeviceLog"  />
+		
+		<typeAlias alias="NovaUserEvaluateType" type = "com.ruoogle.nova.core.meta.NovaUserEvaluateType"/>
+		<typeAlias alias="NovaUserEvaluateMap" type = "com.ruoogle.nova.core.meta.NovaUserEvaluateMap"/>
+		
+		
+		<typeAlias alias="DomobReward" type = "com.ruoogle.nova.core.meta.DomobReward"  />
+		
+		<typeAlias alias="NovaUserVipInfo" type = "com.ruoogle.nova.core.meta.NovaUserVipInfo"  />
+		<typeAlias alias="NovaUserVipRecharge" type = "com.ruoogle.nova.core.meta.NovaUserVipRecharge"  />
+		<typeAlias alias="NovaSystemVipPackage" type = "com.ruoogle.nova.core.meta.NovaSystemVipPackage"  />
+		<typeAlias alias="NovaSystemVipDiscount" type = "com.ruoogle.nova.core.meta.NovaSystemVipDiscount"  />
+		
+		<typeAlias alias="NovaSystemTeachAnswer" type = "com.ruoogle.nova.core.meta.NovaSystemTeachAnswer"/>
+		<!-- <typeAlias alias="NovaGift" type = "com.ruoogle.nova.core.meta.NovaGift"  />
+		<typeAlias alias="NovaGiftCollect" type = "com.ruoogle.nova.core.meta.NovaGiftCollect"  /> -->
+	</typeAliases>
+	<mappers>
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/DomobRewardMapper.xml" />
+		
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaDeviceMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserInfoMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserTokenMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaSystemQuestionMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserPresenceMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserMessageMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserChatgroupMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserChatgroupLogMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserAvatarMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserEvaluateMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserQuestionLogMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserThirdpartyMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserScoreMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserNotifyMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaSystemPropMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserPropMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaSystemMonitorMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserVersionMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaSystemQuestionCollectMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaSystemSuggestAppMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaSystemAdminMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserTradeMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaSystemParamMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaSystemDefaultInfoMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserOperationMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaExtendMessageMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaExtendMarketingMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaSystemFakeAnswerMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaExtendMatchedFakeuserMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaExtendFakeuserMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserAvatarArrayMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserAvatarPraiseLogMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserBlackboxMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserReportMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserRelationshipMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserBlacklistMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserRoomMessageMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaSystemCompereMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserRoomRightMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserChatMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaSystemRoomMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaSystemCoverMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserCoverMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaSystemGiftMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserGiftMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserGiftLogMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaSystemRoomSubjectMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserAccessMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaUserRoomMapper.xml" />
+		<mapper resource="com/ruoogle/nova/core/mapper/xml/NovaDomobMapper.xml" />
+		<mapper resource = "com/ruoogle/nova/core/mapper/xml/NovaExtendMarketingRelationshipMapper.xml" />
+		<mapper resource = "com/ruoogle/nova/core/mapper/xml/NovaExtendMarketingStatisticsMapper.xml" />
+		<mapper resource = "com/ruoogle/nova/core/mapper/xml/NovaUserRankListMapper.xml" />
+		<mapper resource = "com/ruoogle/nova/core/mapper/xml/NovaTreasureMapper.xml" />
+		<mapper resource = "com/ruoogle/nova/core/mapper/xml/NovaUserNearByMapper.xml" />		
+		<mapper resource = "com/ruoogle/nova/core/mapper/xml/NovaSystemAccessMonitorMapper.xml" />
+		<mapper resource = "com/ruoogle/nova/core/mapper/xml/NovaSystemActionMapper.xml"  />
+		<mapper resource = "com/ruoogle/nova/core/mapper/xml/NovaUserExtendMapper.xml"  />
+		<mapper resource = "com/ruoogle/nova/core/mapper/xml/AndroidDeviceLogMapper.xml"  />
+		
+		<!--liyh 2013-12-09 +2 -->
+		<mapper resource = "com/ruoogle/nova/core/mapper/xml/NovaUserEvaluateTypeMapper.xml"/>
+		<mapper resource = "com/ruoogle/nova/core/mapper/xml/NovaUserEvaluateMapMapper.xml"/>
+		<!-- <mapper resource = "com/ruoogle/nova/core/mapper/xml/NovaGiftMapper.xml"  />
+		<mapper resource = "com/ruoogle/nova/core/mapper/xml/NovaGiftCollectMapper.xml"  /> -->
+		
+		<mapper resource = "com/ruoogle/nova/core/mapper/xml/NovaUserVipInfoMapper.xml"/>
+		<mapper resource = "com/ruoogle/nova/core/mapper/xml/NovaUserVipRechargeMapper.xml"/>
+		<mapper resource = "com/ruoogle/nova/core/mapper/xml/NovaSystemVipPackageMapper.xml"/>
+		<mapper resource = "com/ruoogle/nova/core/mapper/xml/NovaSystemVipDiscountMapper.xml"/>
+		
+		<mapper resource = "com/ruoogle/nova/core/mapper/xml/NovaSystemTeachAnswerMapper.xml"/>
+	</mappers>
+</configuration>
+			
