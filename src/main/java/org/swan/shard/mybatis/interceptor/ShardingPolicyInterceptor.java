@@ -49,14 +49,14 @@ public class ShardingPolicyInterceptor implements Interceptor {
 			return invocation.proceed();
 		}
 		MetaObject metasth = MetaObject.forObject(target, OF, OWF);
-		while (metasth.hasGetter("h")) {
-			Object object = metasth.getValue("h");
-			metasth = MetaObject.forObject(object, OF, OWF);
-		}
-		while (metasth.hasGetter("target")) {
-			Object object = metasth.getValue("target");
-			metasth = MetaObject.forObject(object, OF, OWF);
-		}
+//		while (metasth.hasGetter("h")) {
+//			Object object = metasth.getValue("h");
+//			metasth = MetaObject.forObject(object, OF, OWF);
+//		}
+//		while (metasth.hasGetter("target")) {
+//			Object object = metasth.getValue("target");
+//			metasth = MetaObject.forObject(object, OF, OWF);
+//		}
 //		Configuration configuration = (Configuration) metasth.getValue("delegate.configuration");
 //		RowBounds rowBounds = (RowBounds) metaStatementHandler.getValue("delegate.rowBounds");
 //		ParameterMapping.Builder builder = new ParameterMapping.Builder(configuration, "table_name", String.class);
