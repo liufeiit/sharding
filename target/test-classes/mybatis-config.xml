@@ -5,7 +5,7 @@
 		<typeAlias alias="User" type="swan.model.User" />
 	</typeAliases>
 	<plugins>
-		<plugin interceptor="org.matrix.swan.mybatis.interceptor.ShardingPolicyInterceptor"/>
+		<plugin interceptor="org.swan.shard.mybatis.interceptor.ShardingPolicyInterceptor"/>
 	</plugins>
 	<mappers>
 		<mapper resource="mapper/UserMapper.xml"/>

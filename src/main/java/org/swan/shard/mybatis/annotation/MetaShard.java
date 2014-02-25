@@ -19,6 +19,5 @@ import java.lang.annotation.Target;
 @Documented
 public @interface MetaShard {
 	public String name();
-	public int size();
-	public String by();
+	public String expression();
 }

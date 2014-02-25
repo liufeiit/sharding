@@ -3,12 +3,9 @@ package org.swan.shard.mybatis.interceptor;
 import java.sql.Connection;
 import java.util.Properties;
 
-import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ParameterMapping;
-import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
@@ -19,9 +16,10 @@ import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.RowBounds;
 import org.swan.shard.mybatis.annotation.MetaShard;
+import org.swan.shard.mybatis.scripting.DefaultScriptEngine;
+import org.swan.shard.mybatis.scripting.ScriptContext;
+import org.swan.shard.mybatis.scripting.ScriptEngine;
 
 /**
  * 
@@ -33,6 +31,7 @@ import org.swan.shard.mybatis.annotation.MetaShard;
 public class ShardingPolicyInterceptor implements Interceptor {
 	private static final ObjectFactory OF = new DefaultObjectFactory();
 	private static final ObjectWrapperFactory OWF = new DefaultObjectWrapperFactory();
+	private static final ScriptEngine SE = new DefaultScriptEngine("JavaScript");
 	
 	public Object intercept(Invocation invocation) throws Throwable {
 		try {
@@ -60,15 +59,10 @@ public class ShardingPolicyInterceptor implements Interceptor {
 		}
 //		Configuration configuration = (Configuration) metasth.getValue("delegate.configuration");
 //		RowBounds rowBounds = (RowBounds) metaStatementHandler.getValue("delegate.rowBounds");
-		BoundSql boundSql = (BoundSql) metasth.getValue("delegate.boundSql");
-//		metasth.getValue("delegate.boundSql.sql")
-		String sql = boundSql.getSql();
 //		ParameterMapping.Builder builder = new ParameterMapping.Builder(configuration, "table_name", String.class);
 //      boundSql.getParameterMappings().add(builder.mode(ParameterMode.IN).build());
 //      boundSql.setAdditionalParameter("table_name", "User");
 //      metasth.getValue("delegate.boundSql.parameterObject")
-		Object parameterObject = boundSql.getParameterObject();
-		MetaObject metap = MetaObject.forObject(parameterObject, OF, OWF);
 		MappedStatement mappedStatement = (MappedStatement) metasth.getValue("delegate.mappedStatement");
 		String id = mappedStatement.getId();
 		String className = id.substring(0, id.lastIndexOf("."));
@@ -77,8 +71,21 @@ public class ShardingPolicyInterceptor implements Interceptor {
 		if(metaShard == null) {
 			return invocation.proceed();
 		}
-		long by = Long.parseLong(String.valueOf(metap.getValue(metaShard.by())));
-		metasth.setValue("delegate.boundSql.sql", sql.replaceAll(":table_name", new StringBuilder(metaShard.name()).append("_").append(by % metaShard.size()).toString()));
+		BoundSql boundSql = (BoundSql) metasth.getValue("delegate.boundSql");
+//		metasth.getValue("delegate.boundSql.sql")
+		String sql = boundSql.getSql();
+		Object parameterObject = boundSql.getParameterObject();
+		ScriptContext context = new ScriptContext();
+		MetaObject metap = MetaObject.forObject(parameterObject, OF, OWF);
+		String[] getter = metap.getGetterNames();
+		if(getter != null && getter.length > 0) {
+			for (String name : getter) {
+				context.put(name, metap.getValue(name));
+			}
+		}
+		String tableName = metaShard.name() + "_" + SE.eval(metaShard.expression(), context);
+		metasth.setValue("delegate.boundSql.sql", sql.replaceAll(":table_name", tableName));
+		System.out.println("delegate.boundSql.sql : " + metasth.getValue("delegate.boundSql.sql"));
 		return invocation.proceed();
 	}
 
