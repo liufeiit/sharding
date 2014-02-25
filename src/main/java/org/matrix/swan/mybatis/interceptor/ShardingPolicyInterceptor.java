@@ -21,7 +21,7 @@ import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.RowBounds;
-import org.matrix.swan.mybatis.type.ShardingType;
+import org.matrix.swan.mybatis.type.MetaShard;
 
 /**
  * 
@@ -33,82 +33,52 @@ import org.matrix.swan.mybatis.type.ShardingType;
 public class ShardingPolicyInterceptor implements Interceptor {
 	private static final ObjectFactory OF = new DefaultObjectFactory();
 	private static final ObjectWrapperFactory OWF = new DefaultObjectWrapperFactory();
-
+	
 	public Object intercept(Invocation invocation) throws Throwable {
+		try {
+			return intercept0(invocation);
+		} catch (Throwable e) {
+			// ingore
+		}
+		return invocation.proceed();
+	}
+
+	public Object intercept0(Invocation invocation) throws Throwable {
+//		org.apache.ibatis.executor.statement.RoutingStatementHandler
 		Object target = invocation.getTarget();
-		System.out.println("target : " + target.getClass());
 		if (!StatementHandler.class.isInstance(target)) {
 			return invocation.proceed();
 		}
-		StatementHandler statementHandler = StatementHandler.class.cast(target);
-		MetaObject metaStatementHandler = MetaObject.forObject(statementHandler, OF, OWF);
-		while (metaStatementHandler.hasGetter("h")) {
-			Object object = metaStatementHandler.getValue("h");
-			metaStatementHandler = MetaObject.forObject(object, OF, OWF);
+		MetaObject metasth = MetaObject.forObject(target, OF, OWF);
+		while (metasth.hasGetter("h")) {
+			Object object = metasth.getValue("h");
+			metasth = MetaObject.forObject(object, OF, OWF);
 		}
-		while (metaStatementHandler.hasGetter("target")) {
-			Object object = metaStatementHandler.getValue("target");
-			metaStatementHandler = MetaObject.forObject(object, OF, OWF);
+		while (metasth.hasGetter("target")) {
+			Object object = metasth.getValue("target");
+			metasth = MetaObject.forObject(object, OF, OWF);
 		}
-		
-		Configuration configuration = (Configuration) metaStatementHandler.getValue("delegate.configuration");
-//		String dialect = configuration.getVariables().getProperty("dialect");
-		
-		System.out.println("configuration : " + configuration);
-		String originalSql = (String) metaStatementHandler.getValue("delegate.boundSql.sql");
-		BoundSql boundSql = (BoundSql) metaStatementHandler.getValue("delegate.boundSql");
-		System.out.println("originalSql : " + originalSql);
-		System.out.println("boundSql : " + boundSql.getSql());
-		for (ParameterMapping pm : boundSql.getParameterMappings()) {
-			System.out.println("Expression : " + pm.getExpression());
-			System.out.println("Property : " + pm.getProperty());
-			System.out.println("ResultMapId : " + pm.getResultMapId());
-			System.out.println("ResultMapId : " + pm.getMode());
+//		Configuration configuration = (Configuration) metasth.getValue("delegate.configuration");
+//		RowBounds rowBounds = (RowBounds) metaStatementHandler.getValue("delegate.rowBounds");
+		BoundSql boundSql = (BoundSql) metasth.getValue("delegate.boundSql");
+//		metasth.getValue("delegate.boundSql.sql")
+		String sql = boundSql.getSql();
+//		ParameterMapping.Builder builder = new ParameterMapping.Builder(configuration, "table_name", String.class);
+//      boundSql.getParameterMappings().add(builder.mode(ParameterMode.IN).build());
+//      boundSql.setAdditionalParameter("table_name", "User");
+//      metasth.getValue("delegate.boundSql.parameterObject")
+		Object parameterObject = boundSql.getParameterObject();
+		MetaObject metap = MetaObject.forObject(parameterObject, OF, OWF);
+		MappedStatement mappedStatement = (MappedStatement) metasth.getValue("delegate.mappedStatement");
+		String id = mappedStatement.getId();
+		String className = id.substring(0, id.lastIndexOf("."));
+		Class<?> clazz = Class.forName(className);
+		MetaShard metaShard = clazz.getAnnotation(MetaShard.class);
+		if(metaShard == null) {
+			return invocation.proceed();
 		}
-		
-//		RowBounds rowBounds = (RowBounds) metaStatementHandler.getValue("delegate.rowBounds");  
-//        if (rowBounds == null || rowBounds == RowBounds.DEFAULT) {  
-//            return invocation.proceed();  
-//        }
-		
-//		ParameterMapping.Builder builder = new ParameterMapping.Builder(  
-//                configuration, "table_name", String.class);  
-//        boundSql.getParameterMappings().add(builder.mode(ParameterMode.IN).build());  
-//        boundSql.setAdditionalParameter("table_name", "User");
-		boundSql.setAdditionalParameter("table_name", "test.User");
-		
-		
-		Object parameterObject = metaStatementHandler.getValue("delegate.boundSql.parameterObject");
-		if(ParamMap.class.isInstance(parameterObject)) {
-			ParamMap<?> map = (ParamMap<?>) parameterObject;
-			System.out.println("nick : " + map.get("nick"));
-		} else {
-			System.out.println("parameterObject : " + parameterObject);
-		}
-		
-		if (originalSql != null && !originalSql.equals("")) {
-			MappedStatement mappedStatement = (MappedStatement) metaStatementHandler
-					.getValue("delegate.mappedStatement");
-			String id = mappedStatement.getId();
-			System.out.println("delegate.boundSql : " + mappedStatement.getBoundSql("delegate.boundSql").getSql());
-
-			System.out.println("id : " + id);
-			String className = id.substring(0, id.lastIndexOf("."));
-			Class<?> classObj = Class.forName(className);
-			ShardingType tableSeg = classObj.getAnnotation(ShardingType.class);
-			if (tableSeg != null) {
-				// AnalyzeActualSql as = new
-				// AnalyzeActualSqlImpl(mappedStatement, parameterObject,
-				// boundSql);
-				// String shardSql = as.getActualSql(originalSql, tableSeg);
-				// if (shardSql != null) {
-				// metaStatementHandler.setValue("delegate.boundSql.sql",
-				// shardSql);
-				// }
-//				metaStatementHandler.setValue("delegate.boundSql.sql", originalSql.replaceAll("@Table", "User"));
-				System.out.println("ok...");
-			}
-		}
+		long by = Long.parseLong(String.valueOf(metap.getValue(metaShard.by())));
+		metasth.setValue("delegate.boundSql.sql", sql.replaceAll(":table_name", new StringBuilder(metaShard.name()).append("_").append(by % metaShard.size()).toString()));
 		return invocation.proceed();
 	}
 

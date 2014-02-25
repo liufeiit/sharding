@@ -18,11 +18,11 @@ public class Tester {
 		ApplicationContext context = new ClassPathXmlApplicationContext(new String[] { "core-mapper.xml" });
 		UserMapper mapper = context.getBean(UserMapper.class);
 		User user = new User();
-		user.setUserId(10);
-		user.setNick("liufei");
+		user.setUserId(11);
+		user.setNick("liufei===========");
 		user.setPassword("lF1229lf");
 //		mapper.addUser(user);
-		user = mapper.getUserByNickAndPass("liufei", "lF1229lf");
+		user = mapper.getUserByNickAndPass(11, "liufei1", "lF1229lf");
 		System.out.println("user : " + user);
 	}
 }

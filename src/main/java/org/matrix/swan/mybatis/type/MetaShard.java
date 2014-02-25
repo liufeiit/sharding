@@ -17,9 +17,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-public @interface ShardingType {
-
-	public String tableName();
-	public String shardType();
-	public String shardBy();
+public @interface MetaShard {
+	public String name();
+	public int size();
+	public String by();
 }
