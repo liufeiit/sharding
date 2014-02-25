@@ -27,10 +27,10 @@
 			SELECT 
 			LAST_INSERT_ID() AS VALUE 
 		</selectKey> 
-	</insert> 
+	</insert>
 	
-	<select id="getUser" resultMap="UserMapResult">
-		SELECT 
+	<sql id="selectUserAll">
+			SELECT 
 				p_id ,
 				p_userId ,
 				p_nick ,
@@ -38,18 +38,15 @@
 				p_info
 				    from
 			:table_name 
+	</sql>
+	
+	<select id="getUser" resultMap="UserMapResult">
+			<include refid="selectUserAll"/>
 			where p_userId = #{userId};
 	</select> 
 	
 	<select id="getUserByNickAndPass" resultMap="UserMapResult">
-		SELECT 
-				p_id ,
-				p_userId ,
-				p_nick ,
-				p_password ,
-				p_info
-				    from
-			:table_name
+		<include refid="selectUserAll"/>
 			where p_nick = #{nick} and p_password = #{password};
 	</select>
 	
