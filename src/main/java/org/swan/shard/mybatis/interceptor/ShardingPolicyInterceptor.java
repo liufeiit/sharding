@@ -85,7 +85,6 @@ public class ShardingPolicyInterceptor implements Interceptor {
 		}
 		String tableName = metaShard.name() + "_" + SE.eval(metaShard.expression(), context);
 		metasth.setValue("delegate.boundSql.sql", sql.replaceAll(":table_name", tableName));
-		System.out.println("delegate.boundSql.sql : " + metasth.getValue("delegate.boundSql.sql"));
 		return invocation.proceed();
 	}
 
