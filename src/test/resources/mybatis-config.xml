@@ -5,8 +5,8 @@
 		<typeAlias alias="User" type="swan.model.User" />
 	</typeAliases>
 	<plugins>
-		<plugin interceptor="org.swan.shard.mybatis.interceptor.ShardingPolicyInterceptor">
-			<property name="table.name" value="table_name"/>
+		<plugin interceptor="org.swan.shard.mybatis.interceptor.ShardPlugin">
+			<property name="table.name.variable" value="table_name"/>
 		</plugin>
 	</plugins>
 	<mappers>
