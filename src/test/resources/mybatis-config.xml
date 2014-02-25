@@ -6,7 +6,9 @@
 	</typeAliases>
 	<plugins>
 		<plugin interceptor="org.swan.shard.mybatis.interceptor.PagePolicyInterceptor"/>
-		<plugin interceptor="org.swan.shard.mybatis.interceptor.ShardingPolicyInterceptor"/>
+		<plugin interceptor="org.swan.shard.mybatis.interceptor.ShardingPolicyInterceptor">
+			<property name="table.name" value="table_name"/>
+		</plugin>
 	</plugins>
 	<mappers>
 		<mapper resource="mapper/UserMapper.xml"/>

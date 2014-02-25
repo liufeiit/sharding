@@ -1,5 +1,6 @@
 package swan;
 
+import org.apache.ibatis.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -15,6 +16,7 @@ import swan.model.User;
 public class Tester {
 
 	public static void main(String[] args) {
+		LogFactory.useStdOutLogging();
 		ApplicationContext context = new ClassPathXmlApplicationContext(new String[] { "core-mapper.xml" });
 		UserMapper mapper = context.getBean(UserMapper.class);
 		User user = new User();
