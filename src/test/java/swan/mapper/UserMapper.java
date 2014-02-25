@@ -1,7 +1,7 @@
 package swan.mapper;
 
 import org.apache.ibatis.annotations.Param;
-import org.matrix.swan.mybatis.type.MetaShard;
+import org.swan.shard.mybatis.type.MetaShard;
 
 import swan.model.User;
 

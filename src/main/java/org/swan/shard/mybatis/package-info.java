@@ -4,4 +4,4 @@
  * @version 1.0
  * @since 2014年2月24日 下午5:44:41
  */
-package org.matrix.swan.mybatis;
+package org.swan.shard.mybatis;

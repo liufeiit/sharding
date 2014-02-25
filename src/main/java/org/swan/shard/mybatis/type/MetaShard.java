@@ -1,4 +1,4 @@
-package org.matrix.swan.mybatis.type;
+package org.swan.shard.mybatis.type;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

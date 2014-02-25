@@ -1,4 +1,4 @@
-package org.matrix.swan.mybatis.interceptor;
+package org.swan.shard.mybatis.interceptor;
 
 import java.sql.Connection;
 import java.util.Properties;
@@ -21,7 +21,7 @@ import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.RowBounds;
-import org.matrix.swan.mybatis.type.MetaShard;
+import org.swan.shard.mybatis.type.MetaShard;
 
 /**
  * 
