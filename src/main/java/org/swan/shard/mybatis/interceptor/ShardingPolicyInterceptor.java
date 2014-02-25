@@ -18,6 +18,7 @@ import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
+import org.springframework.util.StringUtils;
 import org.swan.shard.mybatis.annotation.MetaShard;
 import org.swan.shard.mybatis.scripting.DefaultScriptEngine;
 import org.swan.shard.mybatis.scripting.ScriptContext;
@@ -41,7 +42,7 @@ public class ShardingPolicyInterceptor implements Interceptor {
 	private static final ObjectWrapperFactory OWF = new DefaultObjectWrapperFactory();
 	private static final ScriptEngine SE = new DefaultScriptEngine("JavaScript");
 
-	public Object intercept(Invocation invocation) throws Throwable {
+	public final Object intercept(Invocation invocation) throws Throwable {
 		try {
 			return intercept0(invocation);
 		} catch (Throwable e) {
@@ -50,7 +51,7 @@ public class ShardingPolicyInterceptor implements Interceptor {
 		return invocation.proceed();
 	}
 	
-	public Object intercept0(Invocation invocation) throws Throwable {
+	protected Object intercept0(Invocation invocation) throws Throwable {
 		Object target = invocation.getTarget();
 		if (!StatementHandler.class.isInstance(target)) {
 			return invocation.proceed();
@@ -83,7 +84,7 @@ public class ShardingPolicyInterceptor implements Interceptor {
 			}
 		}
 		String tableName = metaShard.name() + "_" + SE.eval(metaShard.expression(), context);
-		String shardingsql = sql.replaceAll(":" + properties.getProperty(TABLE_NAME), tableName);
+		String shardingsql = StringUtils.replace(sql, ":" + properties.getProperty(TABLE_NAME), tableName);
 		log.debug("ShardingSQL : " + shardingsql);
 		metaStatementHandler.setValue("delegate.boundSql.sql", shardingsql);
 		return invocation.proceed();

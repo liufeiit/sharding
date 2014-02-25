@@ -5,7 +5,6 @@
 		<typeAlias alias="User" type="swan.model.User" />
 	</typeAliases>
 	<plugins>
-		<plugin interceptor="org.swan.shard.mybatis.interceptor.PagePolicyInterceptor"/>
 		<plugin interceptor="org.swan.shard.mybatis.interceptor.ShardingPolicyInterceptor">
 			<property name="table.name" value="table_name"/>
 		</plugin>
