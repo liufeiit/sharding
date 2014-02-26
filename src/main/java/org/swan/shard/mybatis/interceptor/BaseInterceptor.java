@@ -22,14 +22,15 @@ import org.swan.shard.mybatis.scripting.ScriptEngine;
 public abstract class BaseInterceptor implements Interceptor {
 	protected final Log log = LogFactory.getLog(getClass());
 
-	protected static final String dot = ".";
-	protected static final String table_name_variable = "table.name.variable";
-	protected static final String proxy_target_method = "target";
-	protected static final String proxy_h_method = "h";
+	protected static final String DOT = ".";
+	protected static final String PROXY_TARGET_METHOD = "target";
+	protected static final String PROXY_H_METHOD = "h";
 
-	protected final ObjectFactory object_factory = new DefaultObjectFactory();
-	protected final ObjectWrapperFactory object_wrapper_factory = new DefaultObjectWrapperFactory();
-	protected final ScriptEngine script_engine = new DefaultScriptEngine("JavaScript");
+	protected final ObjectFactory of = new DefaultObjectFactory();
+	protected final ObjectWrapperFactory owf = new DefaultObjectWrapperFactory();
+	protected final ScriptEngine se = new DefaultScriptEngine("JavaScript");
+	
+	protected Properties properties;
 	
 	protected abstract Object interceptInternal(Invocation invocation) throws Throwable;
 	
@@ -57,14 +58,15 @@ public abstract class BaseInterceptor implements Interceptor {
 
 	@Override
 	public final void setProperties(Properties properties) {
+		this.properties = properties;
 		try {
-			init(properties);
+			init();
 		} catch (Throwable e) {
 			log.error("Init Interceptor Error.", e);
 		}
 	}
 	
-	protected void init(Properties properties) throws Throwable {
+	protected void init() throws Throwable {
 		
 	}
 }

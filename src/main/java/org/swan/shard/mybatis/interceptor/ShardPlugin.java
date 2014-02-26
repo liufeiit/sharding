@@ -1,7 +1,6 @@
 package org.swan.shard.mybatis.interceptor;
 
 import java.sql.Connection;
-import java.util.Properties;
 
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -23,44 +22,48 @@ import org.swan.shard.mybatis.scripting.ScriptContext;
  */
 @Intercepts({ @Signature(type = StatementHandler.class, method = "prepare", args = { Connection.class }) })
 public class ShardPlugin extends BaseInterceptor {
-	private Properties properties;
-	
+	private static final String DELEGATE_BOUND_SQL_SQL = "delegate.boundSql.sql";
+	private static final String DELEGATE_BOUND_SQL = "delegate.boundSql";
+	private static final String DELEGATE_MAPPED_STATEMENT = "delegate.mappedStatement";
+
 	protected Object interceptInternal(Invocation invocation) throws Throwable {
 		Object target = invocation.getTarget();
 		if (!StatementHandler.class.isInstance(target)) {
 			return invocation.proceed();
 		}
-		MetaObject metaStatementHandler = MetaObject.forObject(target, object_factory, object_wrapper_factory);
-		while (metaStatementHandler.hasGetter(proxy_h_method)) {
-			Object object = metaStatementHandler.getValue(proxy_h_method);
-			metaStatementHandler = MetaObject.forObject(object, object_factory, object_wrapper_factory);
+		MetaObject metaStatementHandler = MetaObject.forObject(target, of, owf);
+		while (metaStatementHandler.hasGetter(PROXY_H_METHOD)) {
+			Object object = metaStatementHandler.getValue(PROXY_H_METHOD);
+			metaStatementHandler = MetaObject.forObject(object, of, owf);
 		}
-		while (metaStatementHandler.hasGetter(proxy_target_method)) {
-			Object object = metaStatementHandler.getValue(proxy_target_method);
-			metaStatementHandler = MetaObject.forObject(object, object_factory, object_wrapper_factory);
+		while (metaStatementHandler.hasGetter(PROXY_TARGET_METHOD)) {
+			Object object = metaStatementHandler.getValue(PROXY_TARGET_METHOD);
+			metaStatementHandler = MetaObject.forObject(object, of, owf);
 		}
-		MappedStatement mappedStatement = (MappedStatement) metaStatementHandler.getValue("delegate.mappedStatement");
-		String id = mappedStatement.getId();
-		String className = id.substring(0, id.lastIndexOf(dot));
-		Class<?> clazz = Class.forName(className);
+		MappedStatement mappedStatement = (MappedStatement) metaStatementHandler.getValue(DELEGATE_MAPPED_STATEMENT);
+		String mappedId = mappedStatement.getId();
+		String className = mappedId.substring(0, mappedId.lastIndexOf(DOT));
+		Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(className);
 		MetaShard metaShard = clazz.getAnnotation(MetaShard.class);
 		if (metaShard == null) {
 			return invocation.proceed();
 		}
-		BoundSql boundSql = (BoundSql) metaStatementHandler.getValue("delegate.boundSql");
-		String sql = boundSql.getSql();
-		MetaObject metap = MetaObject.forObject(boundSql.getParameterObject(), object_factory, object_wrapper_factory);
-		String[] getter = metap.getGetterNames();
+		BoundSql boundSql = (BoundSql) metaStatementHandler.getValue(DELEGATE_BOUND_SQL);
+		MetaObject metaParameterObject = MetaObject.forObject(boundSql.getParameterObject(), of, owf);
+		String[] getterNames = metaParameterObject.getGetterNames();
 		ScriptContext context = new ScriptContext();
-		if (getter != null && getter.length > 0) {
-			for (String name : getter) {
-				context.put(name, metap.getValue(name));
+		if (getterNames != null && getterNames.length > 0) {
+			for (String getterName : getterNames) {
+				context.put(getterName, metaParameterObject.getValue(getterName));
 			}
 		}
-		String tableName = metaShard.name() + "_" + script_engine.eval(metaShard.expression(), context);
-		String shardingsql = StringUtils.replace(sql, ":" + properties.getProperty(table_name_variable), tableName);
-		log.debug("ShardingSQL : " + shardingsql);
-		metaStatementHandler.setValue("delegate.boundSql.sql", shardingsql);
+		String sql = boundSql.getSql();
+		String tableName = se.eval(metaShard.expression(), context);
+		String shardingsql = StringUtils.replace(sql, metaShard.name(), tableName);
+		if(log.isDebugEnabled()) {
+			log.debug("ShardingSQL : " + shardingsql);
+		}
+		metaStatementHandler.setValue(DELEGATE_BOUND_SQL_SQL, shardingsql);
 		return invocation.proceed();
 	}
 
@@ -70,10 +73,5 @@ public class ShardPlugin extends BaseInterceptor {
 			return target;
 		}
 		return Plugin.wrap(target, this);
-	}
-
-	@Override
-	public void init(Properties properties) throws Throwable {
-		this.properties = properties;
 	}
 }

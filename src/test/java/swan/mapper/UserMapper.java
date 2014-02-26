@@ -11,7 +11,7 @@ import swan.model.User;
  * @version 1.0
  * @since 2014年2月24日 下午5:07:11
  */
-@MetaShard(name="User", expression="function ext(userId){return userId % 2;} ext(userId);")
+@MetaShard(name="USER", expression="function ext(userId){return 'User_' + (userId % 2);} ext(userId);")
 public interface UserMapper {
 
 	long addUser(User user);

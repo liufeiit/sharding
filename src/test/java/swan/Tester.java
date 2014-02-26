@@ -20,9 +20,10 @@ public class Tester {
 		ApplicationContext context = new ClassPathXmlApplicationContext(new String[] { "core-mapper.xml" });
 		UserMapper mapper = context.getBean(UserMapper.class);
 		User user = new User();
-//		user.setUserId(11);
-//		user.setNick("liufei===========");
-//		user.setPassword("lF1229lf");
+		user.setUserId(12);
+		user.setNick("liufei0");
+		user.setPassword("lF1229lf");
+		user.setInfo("kkkkkkkk");
 //		mapper.addUser(user);
 		user = mapper.getUserByNickAndPass(11, "liufei1", "lF1229lf");
 		System.out.println("user : " + user);

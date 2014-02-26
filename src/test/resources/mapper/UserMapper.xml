@@ -12,7 +12,7 @@
 	</resultMap> 
 	
 	<insert id="addUser" parameterType="User"> 
-		INSERT INTO :table_name ( 
+		INSERT INTO USER ( 
 			p_userId ,
 			p_nick ,
 			p_password ,
@@ -37,7 +37,7 @@
 				p_password ,
 				p_info
 				    from
-			:table_name 
+			USER 
 	</sql>
 	
 	<select id="getUser" resultMap="UserMapResult">

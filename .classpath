@@ -6,7 +6,7 @@
 	<classpathentry excluding="**/*.java" kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="M2_REPO/mysql/mysql-connector-java/5.1.14/mysql-connector-java-5.1.14.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/mybatis/mybatis/3.2.4/mybatis-3.2.4.jar" sourcepath="/s"/>
+	<classpathentry kind="var" path="M2_REPO/org/mybatis/mybatis/3.2.4/mybatis-3.2.4.jar" sourcepath="/MyBatis"/>
 	<classpathentry kind="var" path="M2_REPO/org/mybatis/mybatis-spring/1.2.2/mybatis-spring-1.2.2.jar"/>
 	<classpathentry kind="var" path="M2_REPO/commons-dbcp/commons-dbcp/1.4/commons-dbcp-1.4.jar" sourcepath="M2_REPO/commons-dbcp/commons-dbcp/1.4/commons-dbcp-1.4-sources.jar">
 		<attributes>
