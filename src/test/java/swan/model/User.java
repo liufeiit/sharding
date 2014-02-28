@@ -1,5 +1,7 @@
 package swan.model;
 
+import java.util.UUID;
+
 /**
  * 
  * @author 刘飞 E-mail:liufei_it@126.com
@@ -12,11 +14,27 @@ public class User {
 	private String nick;
 	private String password;
 	private String info;
+	
+	private UUID uuid;
 
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", userId=" + userId + ", nick=" + nick + ", password=" + password + ", info=" + info
-				+ "]";
+				+ ", uuid=" + uuid + "]";
+	}
+
+	/**
+	 * @return the uuid
+	 */
+	public UUID getUuid() {
+		return uuid;
+	}
+
+	/**
+	 * @param uuid the uuid to set
+	 */
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
 	}
 
 	/**

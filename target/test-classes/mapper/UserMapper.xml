@@ -9,6 +9,7 @@
 		<result property="nick" column="p_nick" /> 
 		<result property="password" column="p_password" /> 
 		<result property="info" column="p_info" /> 
+		<result property="uuid" column="uuid" typeHandler="org.swan.shard.mybatis.type.UUIDTypeHandler" /> 
 	</resultMap> 
 	
 	<insert id="addUser" parameterType="User"> 
@@ -16,11 +17,13 @@
 			p_userId ,
 			p_nick ,
 			p_password ,
+			uuid,
 			p_info
 		) VALUES ( 
 			#{userId} ,
 			#{nick} ,
 			#{password} ,
+			#{uuid, typeHandler=org.swan.shard.mybatis.type.UUIDTypeHandler} ,
 			#{info}
 		) 
 		<selectKey keyProperty="p_id" resultType="long"> 
@@ -35,6 +38,7 @@
 				p_userId ,
 				p_nick ,
 				p_password ,
+				uuid,
 				p_info
 				    from
 			USER 

@@ -1,5 +1,7 @@
 package swan;
 
+import java.util.UUID;
+
 import org.apache.ibatis.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -24,8 +26,11 @@ public class Tester {
 		user.setNick("liufei0");
 		user.setPassword("lF1229lf");
 		user.setInfo("kkkkkkkk");
+		user.setUuid(UUID.randomUUID());
 //		mapper.addUser(user);
-		user = mapper.getUserByNickAndPass(11, "liufei1", "lF1229lf");
+		user = mapper.getUserByNickAndPass(10, "liufei0", "lF1229lf");
 		System.out.println("user : " + user);
+		
+		System.out.println(UUID.randomUUID());
 	}
 }
