@@ -26,49 +26,48 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 public class DT {
 
 	public static void main(String[] args) throws Exception {
+		// newInstanceExecutor("dt.nova");
+		// Executors.newFixedThreadPool(3);
+//		new Thread(){
+//			@Override
+//			public void run() {
+//				while(true) {
+//					//
+//				}
+//			}
+//			
+//		}.start();
+		
+		ExecutorService executor = newInstanceExecutor("dt.nova");
+		executor.execute(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					dataFlush();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		executor.shutdown();
+	}
+
+	private static void dataFlush() throws Exception {
 		ApplicationContext context = new ClassPathXmlApplicationContext(new String[] { "core-mapper.xml" });
-		NamedParameterJdbcTemplate namedJdbcTemplate = context.getBean("namedJdbcTemplate", NamedParameterJdbcTemplate.class);
+		NamedParameterJdbcTemplate namedJdbcTemplate = context.getBean("namedJdbcTemplate",
+				NamedParameterJdbcTemplate.class);
 		String querySQL = "SELECT * FROM nova_user_notify "
 				+ "WHERE createdAt BETWEEN :startTime and :endTime LIMIT :startIndex, :pageSize";
-		String writeSQL = "INSERT INTO nova_user_notify_%s ("
-				+ "userId, "
-				+ "formUserId, "
-				+ "notifyType, "
-				+ "notifyTopType, "
-				+ "linkedId, "
-				+ "notifyStatus, "
-				+ "notifyAction, "
-				+ "handleFrom, "
-				+ "notifyText, "
-				+ "createdAt, "
-				+ "notifyBackOne, "
-				+ "notifyBackTwo, "
-				+ "notifyBackThree "
-				+ ")VALUES("
-				+ ":userId, "
-				+ ":formUserId, "
-				+ ":notifyType, "
-				+ ":notifyTopType, "
-				+ ":linkedId, "
-				+ ":notifyStatus, "
-				+ ":notifyAction, "
-				+ ":handleFrom, "
-				+ ":notifyText, "
-				+ ":createdAt, "
-				+ ":notifyBackOne, "
-				+ ":notifyBackTwo, "
-				+ ":notifyBackThree)";
 		
-//		Calendar calendar = Calendar.getInstance();
-//		Date endTime = calendar.getTime();
-//		calendar.add(Calendar.DAY_OF_YEAR, -1);
-//		calendar.set(Calendar.HOUR_OF_DAY, 23);
-//		calendar.set(Calendar.MINUTE, 59);
-//		calendar.set(Calendar.SECOND, 59);
-//		Date startTime = calendar.getTime();
-		
-		Date startTime = parseDate("2014-02-27 23:59:59", S);
-		Date endTime = parseDate("2014-03-03 16:45:59", S);
+		String writeSQL = "INSERT INTO nova_user_notify_%s (" + "userId, " + "formUserId, " + "notifyType, "
+				+ "notifyTopType, " + "linkedId, " + "notifyStatus, " + "notifyAction, " + "handleFrom, "
+				+ "notifyText, " + "createdAt, " + "notifyBackOne, " + "notifyBackTwo, " + "notifyBackThree "
+				+ ")VALUES(" + ":userId, " + ":formUserId, " + ":notifyType, " + ":notifyTopType, " + ":linkedId, "
+				+ ":notifyStatus, " + ":notifyAction, " + ":handleFrom, " + ":notifyText, " + ":createdAt, "
+				+ ":notifyBackOne, " + ":notifyBackTwo, " + ":notifyBackThree)";
+
+		Date startTime = parseDate("2014-01-02 23:59:59", S);
+		Date endTime = parseDate("2014-01-03 16:45:59", S);
 		long pageSize = 20000;
 		int pageNum = 1;
 		long startIndex = (pageNum - 1) * pageSize;
@@ -86,11 +85,11 @@ public class DT {
 			} catch (DataAccessException e1) {
 				e1.printStackTrace(System.err);
 			}
-			if(items != null && !items.isEmpty()) {
+			if (items != null && !items.isEmpty()) {
 				System.out.println("第" + pageNum + "页, 取出：" + items.size() + "条数据.");
 				for (Map<String, Object> m : items) {
 					Object val = m.get("userId");
-					if(val == null) {
+					if (val == null) {
 						continue;
 					}
 					long userId = 0L;
@@ -99,12 +98,14 @@ public class DT {
 					} catch (NumberFormatException e) {
 						continue;
 					}
-					if(userId <= 0L) {
+					if (userId <= 0L) {
 						continue;
 					}
-					String sql = String.format(writeSQL, userId % 128);
+					long ext = userId % 128;
+					String sql = String.format(writeSQL, ext);
 					try {
 						namedJdbcTemplate.update(sql, m);
+						//System.out.println("saved into nova_user_notify_" + ext + " >> " + m);
 						count++;
 					} catch (DataAccessException e) {
 						e.printStackTrace(System.err);
@@ -116,29 +117,14 @@ public class DT {
 			paramMap.put("endTime", endTime);
 			paramMap.put("startIndex", startIndex);
 			paramMap.put("pageSize", pageSize);
-//			try {
-//				Thread.sleep(1000L);
-//			} catch (Exception e) {
-//				//
-//			}
 			System.out.println("第" + pageNum + "页, 时间：" + formatDate(new Date(), S));
-		} while(items != null && !items.isEmpty());
+		} while (items != null && !items.isEmpty());
 		long end = System.currentTimeMillis();
 		long ps = (end - start) / 1000 / 60;
-		System.out.println("一共拷贝：" + count + "条数据, [" 
-		+ formatDate(startTime, S)
-		+ ", "
-		+ formatDate(endTime, S) +"], 耗时：" + ps + "分钟.");
-	
-		
-//		ExecutorService executor = newInstanceExecutor("dt.nova");
-//		executor.execute(new Runnable() {
-//			@Override
-//			public void run() {}
-//		});
-		
+		System.out.println("一共拷贝：" + count + "条数据, [" + formatDate(startTime, S) + ", " + formatDate(endTime, S)
+				+ "], 耗时：" + ps + "分钟.");
 	}
-	
+
 	static final String S = "yyyy-MM-dd HH:mm:ss";
 
 	static String formatDate(Date date, String pattern) {
@@ -158,15 +144,15 @@ public class DT {
 		SimpleDateFormat formatter = new SimpleDateFormat(pattern);
 		return formatter.parse(date);
 	}
-	
+
 	static ExecutorService newInstanceExecutor(final String threadName) {
 		return Executors.newCachedThreadPool(new ThreadFactory() {
 			final AtomicInteger threadNumber = new AtomicInteger(1);
 
 			public Thread newThread(Runnable runnable) {
-				Thread thread = new Thread(Thread.currentThread().getThreadGroup(), runnable, "DT-" + threadName
-						+  "-" + threadNumber.getAndIncrement(), 0);
-				thread.setDaemon(true);
+				Thread thread = new Thread(Thread.currentThread().getThreadGroup(), runnable, "DT-" + threadName + "-"
+						+ threadNumber.getAndIncrement(), 0);
+//				thread.setDaemon(true);
 				if (thread.getPriority() != Thread.NORM_PRIORITY) {
 					thread.setPriority(Thread.NORM_PRIORITY);
 				}
