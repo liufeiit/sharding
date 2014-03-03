@@ -37,7 +37,7 @@ public class TableScript {
 				+ "KEY `index_createdAt` (`createdAt`)) "
 				+ "ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户通知表';";
 		
-		for (int i = 0; i < 108; i++) {
+		for (int i = 0; i < 128; i++) {
 			String SQL = String.format(_sql, i);
 			System.out.println(SQL);
 			writer.write(SQL + "\n");
