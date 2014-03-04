@@ -26,39 +26,80 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 public class DT {
 
 	public static void main(String[] args) throws Exception {
-		// newInstanceExecutor("dt.nova");
-		// Executors.newFixedThreadPool(3);
-//		new Thread(){
-//			@Override
-//			public void run() {
-//				while(true) {
-//					//
-//				}
-//			}
-//			
-//		}.start();
-		
 		ExecutorService executor = newInstanceExecutor("dt.nova");
-		executor.execute(new Runnable() {
+		Thread thread1 = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					dataFlush();
+					new DT().dataFlush("线程1", "2014-02-20 23:59:59", "2014-02-22 16:45:59");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
-		executor.shutdown();
+		thread1.setName("线程1");
+		executor.execute(thread1);
+
+		Thread thread2 = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					new DT().dataFlush("线程2", "2014-02-22 16:45:59", "2014-02-24 16:45:59");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		thread2.setName("线程2");
+		executor.execute(thread2);
+
+		Thread thread3 = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					new DT().dataFlush("线程3", "2014-02-24 16:45:59", "2014-02-26 16:45:59");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		thread3.setName("线程3");
+		executor.execute(thread3);
+
+		Thread thread4 = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					new DT().dataFlush("线程4", "2014-02-26 16:45:59", "2014-03-01 16:45:59");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		thread4.setName("线程4");
+		executor.execute(thread4);
+
+		Thread thread5 = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					new DT().dataFlush("线程5", "2014-03-01 16:45:59", "2014-03-03 16:45:59");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		thread5.setName("线程5");
+		executor.execute(thread5);
 	}
 
-	private static void dataFlush() throws Exception {
+	private void dataFlush(String name, String s, String e) throws Exception {
 		ApplicationContext context = new ClassPathXmlApplicationContext(new String[] { "core-mapper.xml" });
 		NamedParameterJdbcTemplate namedJdbcTemplate = context.getBean("namedJdbcTemplate",
 				NamedParameterJdbcTemplate.class);
 		String querySQL = "SELECT * FROM nova_user_notify "
 				+ "WHERE createdAt BETWEEN :startTime and :endTime LIMIT :startIndex, :pageSize";
-		
+
 		String writeSQL = "INSERT INTO nova_user_notify_%s (" + "userId, " + "formUserId, " + "notifyType, "
 				+ "notifyTopType, " + "linkedId, " + "notifyStatus, " + "notifyAction, " + "handleFrom, "
 				+ "notifyText, " + "createdAt, " + "notifyBackOne, " + "notifyBackTwo, " + "notifyBackThree "
@@ -66,8 +107,8 @@ public class DT {
 				+ ":notifyStatus, " + ":notifyAction, " + ":handleFrom, " + ":notifyText, " + ":createdAt, "
 				+ ":notifyBackOne, " + ":notifyBackTwo, " + ":notifyBackThree)";
 
-		Date startTime = parseDate("2014-01-02 23:59:59", S);
-		Date endTime = parseDate("2014-01-03 16:45:59", S);
+		Date startTime = parseDate(s, S);
+		Date endTime = parseDate(e, S);
 		long pageSize = 20000;
 		int pageNum = 1;
 		long startIndex = (pageNum - 1) * pageSize;
@@ -86,7 +127,7 @@ public class DT {
 				e1.printStackTrace(System.err);
 			}
 			if (items != null && !items.isEmpty()) {
-				System.out.println("第" + pageNum + "页, 取出：" + items.size() + "条数据.");
+				System.out.println(name + " 第" + pageNum + "页, 取出：" + items.size() + "条数据.");
 				for (Map<String, Object> m : items) {
 					Object val = m.get("userId");
 					if (val == null) {
@@ -95,7 +136,7 @@ public class DT {
 					long userId = 0L;
 					try {
 						userId = Long.parseLong(String.valueOf(val));
-					} catch (NumberFormatException e) {
+					} catch (NumberFormatException ex) {
 						continue;
 					}
 					if (userId <= 0L) {
@@ -105,10 +146,11 @@ public class DT {
 					String sql = String.format(writeSQL, ext);
 					try {
 						namedJdbcTemplate.update(sql, m);
-						//System.out.println("saved into nova_user_notify_" + ext + " >> " + m);
+						// System.out.println("saved into nova_user_notify_" +
+						// ext + " >> " + m);
 						count++;
-					} catch (DataAccessException e) {
-						e.printStackTrace(System.err);
+					} catch (DataAccessException ex) {
+						ex.printStackTrace(System.err);
 					}
 				}
 			}
@@ -117,17 +159,17 @@ public class DT {
 			paramMap.put("endTime", endTime);
 			paramMap.put("startIndex", startIndex);
 			paramMap.put("pageSize", pageSize);
-			System.out.println("第" + pageNum + "页, 时间：" + formatDate(new Date(), S));
+			System.out.println(name + " 第" + pageNum + "页, 时间：" + formatDate(new Date(), S));
 		} while (items != null && !items.isEmpty());
 		long end = System.currentTimeMillis();
 		long ps = (end - start) / 1000 / 60;
-		System.out.println("一共拷贝：" + count + "条数据, [" + formatDate(startTime, S) + ", " + formatDate(endTime, S)
-				+ "], 耗时：" + ps + "分钟.");
+		System.out.println(name + " 一共拷贝：" + count + "条数据, [" + formatDate(startTime, S) + ", "
+				+ formatDate(endTime, S) + "], 耗时：" + ps + "分钟.");
 	}
 
-	static final String S = "yyyy-MM-dd HH:mm:ss";
+	final String S = "yyyy-MM-dd HH:mm:ss";
 
-	static String formatDate(Date date, String pattern) {
+	String formatDate(Date date, String pattern) {
 		if (date == null)
 			throw new IllegalArgumentException("date is null");
 		if (pattern == null)
@@ -136,7 +178,7 @@ public class DT {
 		return formatter.format(date);
 	}
 
-	static Date parseDate(String date, String pattern) throws ParseException {
+	Date parseDate(String date, String pattern) throws ParseException {
 		if (date == null)
 			throw new IllegalArgumentException("date is null");
 		if (pattern == null)
@@ -152,7 +194,7 @@ public class DT {
 			public Thread newThread(Runnable runnable) {
 				Thread thread = new Thread(Thread.currentThread().getThreadGroup(), runnable, "DT-" + threadName + "-"
 						+ threadNumber.getAndIncrement(), 0);
-//				thread.setDaemon(true);
+				// thread.setDaemon(true);
 				if (thread.getPriority() != Thread.NORM_PRIORITY) {
 					thread.setPriority(Thread.NORM_PRIORITY);
 				}
