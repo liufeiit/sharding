@@ -17,25 +17,41 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
-	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
-	
-	<bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
-		<constructor-arg index="0" ref="dataSource"/>
+
+	<bean id="namedJdbcTemplate"
+		class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+		<constructor-arg index="0" ref="dataSource" />
 	</bean>
 
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-		<property name="driverClassName" value="${master.mysql.driver}"/>
-		<property name="url" value="${master.mysql.url}"/>
-		<property name="username" value="${master.mysql.user}"/>
-		<property name="password" value="${master.mysql.pass}"/>
-		<property name="initialSize" value="${master.mysql.initialSize}"/>
-		<property name="maxActive" value="${master.mysql.maxActive}"/>
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${master.mysql.driver}" />
+		<property name="url" value="${master.mysql.url}" />
+		<property name="username" value="${master.mysql.user}" />
+		<property name="password" value="${master.mysql.pass}" />
+		<property name="initialSize" value="${master.mysql.initialSize}" />
+		<property name="maxActive" value="${master.mysql.maxActive}" />
 	</bean>
 
 	<bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
-		<property name="mapperInterface" value="swan.mapper.UserMapper"/>
+		<property name="mapperInterface" value="swan.mapper.UserMapper" />
 	</bean>
+
+	<bean id="accessInterceptor" class="org.swan.shard.interceptor.AccessInterceptor" />
+
+	<aop:config>
+		<aop:pointcut id="mapperProxy" expression="execution(* swan.mapper.UserMapper.*(..))" />
+		<aop:advisor pointcut-ref="mapperProxy" advice-ref="accessInterceptor" />
+	</aop:config>
+
+	<!-- <aop:config>
+		<aop:pointcut id="mapperProxy" expression="execution(* swan.mapper.*.*(..))" />
+		<aop:advisor pointcut-ref="mapperProxy" advice-ref="accessInterceptor" />
+	</aop:config> -->
+
 </beans>
