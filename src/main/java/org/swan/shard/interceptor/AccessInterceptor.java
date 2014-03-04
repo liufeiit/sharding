@@ -18,7 +18,7 @@ public class AccessInterceptor implements MethodInterceptor {
 	public Object invoke(MethodInvocation invocation) throws Throwable {
 		Method method = invocation.getMethod();
 		Object[] args = invocation.getArguments();
-		System.err.println("method : " + method);
+		System.err.println("method : " + method.getName());
 		System.err.println("args : " + Arrays.toString(args));
 		return invocation.proceed();
 	}
